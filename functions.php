@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BGC_VERSION', '1.2.0' );
+define( 'BGC_VERSION', '1.2.1' );
 define( 'BGC_DIR', get_template_directory() );
 define( 'BGC_URI', get_template_directory_uri() );
 

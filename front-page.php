@@ -20,7 +20,9 @@ get_header();
 
 <section class="hero">
 	<div class="hero-copy rise">
-		<p class="eyebrow"><?php esc_html_e( 'Cupcakes &amp; Sweet Treats', 'bloomingood' ); ?></p>
+		<?php if ( bgc_opt( 'eyebrow' ) ) : ?>
+			<p class="eyebrow"><?php echo esc_html( bgc_opt( 'eyebrow' ) ); ?></p>
+		<?php endif; ?>
 		<h1><?php esc_html_e( 'Bespoke cupcake bouquets, made to order in Hethersett, Norwich', 'bloomingood' ); ?></h1>
 		<p class="hero-sub"><?php esc_html_e( 'Cupcakes and party cakes, baked fresh to order in my home kitchen in Norwich. Each bite is a celebration of quality, creativity, and passion.', 'bloomingood' ); ?></p>
 		<div class="hero-acts">
@@ -172,7 +174,7 @@ get_header();
 		<div class="wed">
 			<div>
 				<blockquote class="wed-quote"><?php esc_html_e( 'Bloomin\' Good Cupcakes supplied 70 cupcakes for our wedding, including vegan and gluten free options. The cakes were absolutely delicious and stunningly beautiful! They made a great alternative from the traditional wedding cake, and made it straightforward to cater to different dietary requirements. Photo credit Emma Louise Photography.', 'bloomingood' ); ?></blockquote>
-				<cite class="wed-attr"><?php esc_html_e( 'Google review, June 2026', 'bloomingood' ); ?></cite>
+				<cite class="wed-attr"><?php esc_html_e( 'Bryony Yates · Google review', 'bloomingood' ); ?></cite>
 				<p class="wed-note"><?php esc_html_e( 'Wedding orders start with a consultation, where we agree the design and the deposit together.', 'bloomingood' ); ?></p>
 				<p class="cred-link"><a class="tlink" href="#order"><span><?php esc_html_e( 'Ask about a wedding', 'bloomingood' ); ?></span></a></p>
 			</div>

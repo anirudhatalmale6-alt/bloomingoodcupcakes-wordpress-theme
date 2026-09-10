@@ -29,6 +29,7 @@ function bgc_defaults() {
 		'fhrs_date'      => '14 July 2025',
 		'fhrs_url'       => 'https://ratings.food.gov.uk/business/1227205',
 		'notice'         => '',
+		'eyebrow'        => 'Cupcakes & Party Cakes',
 		'instagram'      => 'https://www.instagram.com/bloomingoodcupcakes/',
 		'facebook'       => '',
 		'place_id'       => '',
@@ -88,6 +89,24 @@ function bgc_customize( $wp_customize ) {
 			array( 'label' => $meta[0], 'section' => 'bgc_contact', 'type' => $meta[1] )
 		);
 	}
+
+	/* ---- Hero line ------------------------------------------------------- */
+	$wp_customize->add_section(
+		'bgc_hero',
+		array(
+			'title'       => __( 'Line above the headline', 'bloomingood' ),
+			'panel'       => 'bgc',
+			'description' => __( 'The small italic line at the very top of the page. Leave it empty and it disappears entirely.', 'bloomingood' ),
+		)
+	);
+	$wp_customize->add_setting(
+		'bgc_eyebrow',
+		array( 'default' => $d['eyebrow'], 'sanitize_callback' => 'sanitize_text_field' )
+	);
+	$wp_customize->add_control(
+		'bgc_eyebrow',
+		array( 'label' => __( 'Line above the headline', 'bloomingood' ), 'section' => 'bgc_hero', 'type' => 'text' )
+	);
 
 	/* ---- Notice ---------------------------------------------------------- */
 	$wp_customize->add_section(
