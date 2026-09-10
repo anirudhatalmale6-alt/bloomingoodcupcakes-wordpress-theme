@@ -1,11 +1,10 @@
 <?php
 /**
- * The Enquiries screen.
- *
- * The list is the thing Claire actually uses, so the columns are the ones she
- * needs at a glance: who, what, when they need it, and whether the email got
- * out. That last column is the point of storing enquiries at all -- it makes a
- * mail failure visible instead of silent.
+ * Plugin Name: Bloomin' Good Cupcakes — enquiries admin
+ * Description: The Enquiries list screen. Separate file so the delivery path in
+ *              bgc-enquiries.php stays readable.
+ * Version:     1.1.0
+ * Author:      Smile Creative
  *
  * @package bloomingood
  */
@@ -65,17 +64,18 @@ function bgc_enquiry_column( $col, $post_id ) {
 			break;
 
 		case 'bgc_mail':
+			// A held enquiry is not a failure and must not read like one.
 			$suspect = get_post_meta( $post_id, '_bgc_suspect', true );
 			if ( $suspect ) {
 				printf(
 					'<span title="%s" style="color:#8A6D1F">%s</span>',
-					esc_attr( sprintf( __( 'Spam trap: %s. Stored but not emailed.', 'bloomingood' ), $suspect ) ),
+					esc_attr( sprintf( __( 'Spam check: %s. Stored, not emailed.', 'bloomingood' ), $suspect ) ),
 					esc_html__( 'Held', 'bloomingood' )
 				);
 				break;
 			}
-			// Stored as 0/1 at submission time. An enquiry with no flag at all
-			// predates the flag; say so rather than guessing.
+			// 0/1 set at submission. No flag at all predates the flag; say so
+			// rather than guessing.
 			$flag = get_post_meta( $post_id, '_bgc_emailed', true );
 			if ( '' === $flag ) {
 				echo '—';
@@ -90,10 +90,7 @@ function bgc_enquiry_column( $col, $post_id ) {
 add_action( 'manage_bgc_enquiry_posts_custom_column', 'bgc_enquiry_column', 10, 2 );
 
 /**
- * Show the whole enquiry on the edit screen.
- *
- * The content field holds the message; the meta box puts the rest beside it so
- * nothing has to be dug out of custom fields.
+ * The whole enquiry beside the message on the edit screen.
  */
 function bgc_enquiry_metabox() {
 	add_meta_box(
@@ -106,6 +103,7 @@ function bgc_enquiry_metabox() {
 				__( 'Phone', 'bloomingood' )       => get_post_meta( $post->ID, '_bgc_phone', true ),
 				__( 'Looking for', 'bloomingood' ) => get_post_meta( $post->ID, '_bgc_type_label', true ),
 				__( 'Date needed', 'bloomingood' ) => get_post_meta( $post->ID, '_bgc_date', true ),
+				__( 'Spam check', 'bloomingood' )  => get_post_meta( $post->ID, '_bgc_suspect', true ),
 			);
 			echo '<table class="widefat striped"><tbody>';
 			foreach ( $rows as $k => $v ) {

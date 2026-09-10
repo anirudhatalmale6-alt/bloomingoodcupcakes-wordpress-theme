@@ -19,15 +19,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BGC_VERSION', '1.0.4' );
+define( 'BGC_VERSION', '1.2.0' );
 define( 'BGC_DIR', get_template_directory() );
 define( 'BGC_URI', get_template_directory_uri() );
 
 require_once BGC_DIR . '/inc/customizer.php';   // defines bgc_defaults(), used by bgc_opt()
 require_once BGC_DIR . '/inc/helpers.php';
-require_once BGC_DIR . '/inc/enquiry.php';
-require_once BGC_DIR . '/inc/enquiry-admin.php';
+require_once BGC_DIR . '/inc/reviews.php';
 require_once BGC_DIR . '/inc/seo.php';
+
+/*
+ * Lead handling deliberately does NOT live here. The enquiry post type, the
+ * spam scoring and the delivery path are in mu-plugins/bgc-enquiries.php, so
+ * that changing or updating this theme cannot take the leads with it, and so
+ * that switching theme does not hide every stored enquiry from wp-admin.
+ * The templates below call those functions defensively.
+ */
 
 /**
  * Theme supports.

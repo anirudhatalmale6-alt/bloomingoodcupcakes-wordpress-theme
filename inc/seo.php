@@ -75,6 +75,10 @@ function bgc_schema() {
 			),
 		);
 	}
+	$social = array_filter( array( bgc_opt( 'instagram' ), bgc_opt( 'facebook' ) ) );
+	if ( $social ) {
+		$data['sameAs'] = array_values( $social );
+	}
 	$data['areaServed'] = array(
 		array( '@type' => 'City', 'name' => 'Norwich' ),
 		array( '@type' => 'Place', 'name' => 'Hethersett' ),
@@ -102,12 +106,35 @@ function bgc_schema() {
 		$data['makesOffer'] = $offers;
 	}
 
+	/** Filter the Bakery schema before it is printed. */
+	$data = apply_filters( 'bgc_schema_data', $data );
+
 	printf(
 		'<script type="application/ld+json">%s</script>' . "\n",
 		wp_json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE )
 	);
 }
 add_action( 'wp_head', 'bgc_schema', 20 );
+
+/**
+ * Meta description.
+ *
+ * WordPress prints none by default and there is no SEO plugin on this build, so
+ * without this the page has no description at all -- which is the same fault the
+ * audit found on two of the old site's six pages. Written once, location-first,
+ * and short enough that Google will not truncate the useful half.
+ */
+function bgc_meta_description() {
+	$desc = bgc_opt(
+		'meta_description',
+		__( 'Hand-piped buttercream cupcake bouquets, gift boxes and party cakes, baked to order in Hethersett near Norwich. Food hygiene rating 5. Collection from my kitchen.', 'bloomingood' )
+	);
+	if ( '' === trim( $desc ) ) {
+		return;
+	}
+	printf( '<meta name="description" content="%s">' . "\n", esc_attr( $desc ) );
+}
+add_action( 'wp_head', 'bgc_meta_description', 2 );
 
 /**
  * Share card.
@@ -124,7 +151,7 @@ function bgc_og() {
 		'og:type'        => 'website',
 		'og:site_name'   => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
 		'og:title'       => wp_get_document_title(),
-		'og:description' => wp_specialchars_decode( get_bloginfo( 'description' ), ENT_QUOTES ),
+		'og:description' => bgc_opt( 'meta_description', wp_specialchars_decode( get_bloginfo( 'description' ), ENT_QUOTES ) ),
 		'og:url'         => home_url( '/' ),
 		'og:image'       => BGC_URI . '/assets/img/share-card.jpg',
 	);

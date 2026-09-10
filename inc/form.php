@@ -17,6 +17,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( ! function_exists( 'bgc_form_state' ) || ! function_exists( 'bgc_enquiry_types' ) ) {
+	/*
+	 * The lead handling lives in mu-plugins/bgc-enquiries.php. If that file is
+	 * ever missing, show the phone number rather than a form that silently
+	 * cannot deliver -- an enquiry route that looks fine and goes nowhere is the
+	 * exact failure this whole build is designed to avoid.
+	 */
+	printf(
+		'<p class="formmsg err">%s <a href="tel:%s">%s</a>.</p>',
+		esc_html__( 'The order form is temporarily unavailable. Please call', 'bloomingood' ),
+		esc_attr( bgc_tel_href() ),
+		esc_html( bgc_opt( 'phone' ) )
+	);
+	return;
+}
+
 $bgc_state  = bgc_form_state();
 $bgc_errors = $bgc_state['errors'];
 $bgc_val    = $bgc_state['values'];

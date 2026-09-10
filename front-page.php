@@ -16,7 +16,6 @@
 
 get_header();
 
-$bgc_state = bgc_form_state();
 ?>
 
 <section class="hero">
@@ -286,16 +285,59 @@ $bgc_state = bgc_form_state();
 <section class="band band-tall" id="customers">
 	<div class="shell">
 		<h2 class="h2"><?php esc_html_e( 'Happy Customers', 'bloomingood' ); ?></h2>
-		<div class="quotes">
-			<div class="q">
-				<blockquote><?php esc_html_e( 'I am unbelievably impressed by the cupcakes you so kindly brought in to us at the surgery today. It was safe to say they tasted as good as they looked! It made everyone smile. Thank you', 'bloomingood' ); ?></blockquote>
-				<cite><?php esc_html_e( 'Cupcakes taken in to a local surgery', 'bloomingood' ); ?></cite>
+		<?php
+		/*
+		 * Live Google reviews if there are enough of them to be worth showing,
+		 * otherwise the written quotes. See inc/reviews.php for why the floor
+		 * exists: as of the audit this listing carried one review, and a feed
+		 * showing one review advertises the weakness rather than hiding it.
+		 */
+		if ( function_exists( 'bgc_reviews_ready' ) && bgc_reviews_ready() ) :
+			$bgc_g = bgc_google_reviews();
+			?>
+			<p class="lede">
+				<?php
+				printf(
+					/* translators: 1: star rating, 2: number of reviews */
+					esc_html__( 'Rated %1$s on Google from %2$s reviews.', 'bloomingood' ),
+					esc_html( number_format_i18n( $bgc_g['rating'], 1 ) ),
+					esc_html( number_format_i18n( $bgc_g['count'] ) )
+				);
+				?>
+			</p>
+			<div class="quotes">
+				<?php foreach ( array_slice( $bgc_g['reviews'], 0, 4 ) as $bgc_r ) : ?>
+					<div class="q">
+						<blockquote><?php echo esc_html( $bgc_r['text'] ); ?></blockquote>
+						<cite>
+							<?php echo esc_html( $bgc_r['author'] ); ?><?php
+							if ( $bgc_r['when'] ) {
+								echo ' &middot; ' . esc_html( $bgc_r['when'] );
+							}
+							?>
+						</cite>
+					</div>
+				<?php endforeach; ?>
 			</div>
-			<div class="q">
-				<blockquote><?php esc_html_e( 'Claire made an absolutely amazing 30th cupcake birthday cake for my daughter. They really did look like a bunch of flowers and the colours were stunning. They not only looked gorgeous, but they were delicious. If you ever need a birthday cake made, then Bloomin\' Good Cupcakes is definitely the best choice!', 'bloomingood' ); ?></blockquote>
-				<cite><?php esc_html_e( 'A 30th birthday, ordered for a daughter', 'bloomingood' ); ?></cite>
+			<?php if ( $bgc_g['url'] ) : ?>
+				<p class="gal-foot">
+					<a class="tlink" href="<?php echo esc_url( $bgc_g['url'] ); ?>" rel="noopener">
+						<span><?php esc_html_e( 'Read them on Google', 'bloomingood' ); ?></span>
+					</a>
+				</p>
+			<?php endif; ?>
+		<?php else : ?>
+			<div class="quotes">
+				<div class="q">
+					<blockquote><?php esc_html_e( 'I am unbelievably impressed by the cupcakes you so kindly brought in to us at the surgery today. It was safe to say they tasted as good as they looked! It made everyone smile. Thank you', 'bloomingood' ); ?></blockquote>
+					<cite><?php esc_html_e( 'Cupcakes taken in to a local surgery', 'bloomingood' ); ?></cite>
+				</div>
+				<div class="q">
+					<blockquote><?php esc_html_e( 'Claire made an absolutely amazing 30th cupcake birthday cake for my daughter. They really did look like a bunch of flowers and the colours were stunning. They not only looked gorgeous, but they were delicious. If you ever need a birthday cake made, then Bloomin\' Good Cupcakes is definitely the best choice!', 'bloomingood' ); ?></blockquote>
+					<cite><?php esc_html_e( 'A 30th birthday, ordered for a daughter', 'bloomingood' ); ?></cite>
+				</div>
 			</div>
-		</div>
+		<?php endif; ?>
 	</div>
 </section>
 
@@ -330,6 +372,13 @@ $bgc_state = bgc_form_state();
 			<div class="gal-b"><?php bgc_picture( 'gallery-bouquet-7', __( 'A bouquet of seven deluxe cupcakes in deep red and cream', 'bloomingood' ), array( 'sizes' => '(min-width:800px) 28vw, 50vw' ) ); ?></div>
 			<div class="gal-c"><?php bgc_picture( 'gallery-6-flowers', __( 'Six deluxe cupcakes piped as pale pink and cream flowers', 'bloomingood' ), array( 'sizes' => '(min-width:800px) 28vw, 50vw' ) ); ?></div>
 		</div>
+		<?php if ( bgc_opt( 'instagram' ) ) : ?>
+			<p class="gal-foot">
+				<a class="tlink" href="<?php echo esc_url( bgc_opt( 'instagram' ) ); ?>" rel="noopener">
+					<span><?php esc_html_e( 'Follow on Instagram', 'bloomingood' ); ?></span>
+				</a>
+			</p>
+		<?php endif; ?>
 	</div>
 </section>
 

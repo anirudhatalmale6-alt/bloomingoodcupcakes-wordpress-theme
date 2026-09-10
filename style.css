@@ -9,7 +9,7 @@ Description: Bespoke theme for Bloomin' Good Cupcakes, Hethersett. One page, no
   order form from every scroll depth, one price list, the food hygiene rating
   cited and linked, the bouquets shown at a size the piping reads at, and the
   buying questions answered beside the products instead of in the terms page.
-Version: 1.0.4
+Version: 1.2.0
 Requires at least: 6.0
 Requires PHP: 7.4
 License: GNU General Public License v2 or later
@@ -339,3 +339,50 @@ summary:focus-visible{outline:3px solid var(--berry);outline-offset:2px}
 .notice-bar{margin:0;background:var(--berry);color:#fff;text-align:center;
   padding:9px 18px;font-size:15px;font-weight:600;letter-spacing:.01em}
 .notice-bar a{color:#fff;text-decoration:underline}
+
+/* ---------------------------------------------------------------------------
+   Mobile navigation.
+
+   The mockup hid the nav entirely below 900px, leaving a phone visitor with a
+   logo and one button and no way to reach the prices or the showcase. Measured
+   at 768px: 0 of 3 nav links visible and no hamburger. The QC checklist wants a
+   working responsive nav at that width.
+
+   No hamburger here on purpose. Three links is fewer than the tap target of a
+   menu button, and a disclosure widget that has to be opened to reveal three
+   words costs a tap and a piece of JavaScript to save one line of space. They
+   wrap onto their own row instead.
+   --------------------------------------------------------------------------- */
+@media (max-width:899px){
+  .hdr-in{flex-wrap:wrap;row-gap:6px}
+  .hdr-logo{margin-right:auto}
+  .hdr-nav{display:flex;order:3;width:100%;gap:20px;justify-content:flex-start;
+    border-top:1px solid var(--rule);padding-top:8px;margin-top:2px}
+  .hdr-nav a{font-size:15px}
+  .hdr-tel{display:none}          /* the phone lives in the order section and the footer */
+}
+@media (max-width:420px){
+  .hdr-name{font-size:15px}
+  .hdr-nav{gap:14px}
+  .btn-sm{padding:8px 12px;font-size:13px}
+}
+
+/* The agency credit. Quiet, and on its own line on a phone. */
+.ftr-by{display:block;margin-top:4px;opacity:.72}
+@media (min-width:700px){ .ftr-by{display:inline;margin-top:0} .ftr-by::before{content:" · "} }
+.ftr-by a{color:inherit}
+
+/* Legal pages. One column, measured for reading rather than for layout. */
+.shell-narrow{max-width:760px}
+.prose h2{font-size:22px;margin:30px 0 8px}
+.prose h3{font-size:18px;margin:24px 0 6px}
+.prose p,.prose li{color:var(--ink-soft);font-size:17px}
+.prose p{margin:0 0 14px}
+.prose ul{margin:0 0 16px;padding-left:20px}
+.prose li{margin-bottom:7px}
+.prose strong{color:var(--ink)}
+/* A visible marker for anything still awaiting the client's own wording, so a
+   placeholder can never quietly go live the way the old terms page did -- it
+   carried an unfilled template placeholder five times. */
+.prose .todo{display:block;background:#FDF6E3;border-left:3px solid #B8860B;
+  padding:11px 14px;margin:0 0 16px;color:#6b5a24;font-size:16px}

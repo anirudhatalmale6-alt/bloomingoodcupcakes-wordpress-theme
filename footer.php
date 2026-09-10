@@ -32,6 +32,12 @@
 					<span><?php echo esc_html( bgc_opt( 'address' ) ); ?></span>
 				</div>
 				<div class="ftr-meta">
+					<?php if ( bgc_opt( 'instagram' ) ) : ?>
+						<a href="<?php echo esc_url( bgc_opt( 'instagram' ) ); ?>" rel="noopener">Instagram</a>
+					<?php endif; ?>
+					<?php if ( bgc_opt( 'facebook' ) ) : ?>
+						<a href="<?php echo esc_url( bgc_opt( 'facebook' ) ); ?>" rel="noopener">Facebook</a>
+					<?php endif; ?>
 					<?php
 					wp_nav_menu(
 						array(
@@ -57,7 +63,13 @@
 					<?php endif; ?>
 				</div>
 			</div>
-			<p class="ftr-btm">&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> Bloomin&rsquo; Good Cupcakes</p>
+			<p class="ftr-btm">
+				&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> Bloomin&rsquo; Good Cupcakes
+				<span class="ftr-by">
+					<?php esc_html_e( 'Designed by', 'bloomingood' ); ?>
+					<a href="https://smilecreative.agency/" rel="noopener">Smile Creative</a>
+				</span>
+			</p>
 		</div>
 	</footer>
 

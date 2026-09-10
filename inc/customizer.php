@@ -29,6 +29,12 @@ function bgc_defaults() {
 		'fhrs_date'      => '14 July 2025',
 		'fhrs_url'       => 'https://ratings.food.gov.uk/business/1227205',
 		'notice'         => '',
+		'instagram'      => 'https://www.instagram.com/bloomingoodcupcakes/',
+		'facebook'       => '',
+		'place_id'       => '',
+		'places_key'     => '',
+		'reviews_min'    => '3',
+		'meta_description' => 'Hand-piped buttercream cupcake bouquets, gift boxes and party cakes, baked to order in Hethersett near Norwich. Food hygiene rating 5. Collection from my kitchen.',
 		'prices_bouquet' => "Classic Cupcake Bouquet x 3 | £15\nClassic Cupcake Bouquet x 7 | £28\nDeluxe Cupcake Bouquet x 7 | £34\nDeluxe Cupcake Bouquet x 12 | £50\nDeluxe Cupcake Bouquet x 19 | £70",
 		'prices_box'     => "Boxed Deluxe Cupcakes x 6 | £27\nBoxed Deluxe Cupcakes x 12 | £44",
 		'prices_naked'   => "3 Layer 6 inch | £35\n3 Layer 7 inch | £40\n3 Layer 8 inch | £45",
@@ -156,6 +162,79 @@ function bgc_customize( $wp_customize ) {
 			array( 'label' => $label, 'section' => 'bgc_prices', 'type' => 'textarea' )
 		);
 	}
+
+	/* ---- Social + search ------------------------------------------------- */
+	$wp_customize->add_section(
+		'bgc_social',
+		array(
+			'title'       => __( 'Social links and search description', 'bloomingood' ),
+			'panel'       => 'bgc',
+			'description' => __( 'Leave a social box empty and that link simply does not appear. The description is the sentence Google shows under the site name.', 'bloomingood' ),
+		)
+	);
+	foreach ( array(
+		'instagram' => array( __( 'Instagram page', 'bloomingood' ), 'url' ),
+		'facebook'  => array( __( 'Facebook page', 'bloomingood' ), 'url' ),
+	) as $key => $meta ) {
+		$wp_customize->add_setting(
+			'bgc_' . $key,
+			array( 'default' => $d[ $key ], 'sanitize_callback' => 'esc_url_raw' )
+		);
+		$wp_customize->add_control(
+			'bgc_' . $key,
+			array( 'label' => $meta[0], 'section' => 'bgc_social', 'type' => 'url' )
+		);
+	}
+	$wp_customize->add_setting(
+		'bgc_meta_description',
+		array( 'default' => $d['meta_description'], 'sanitize_callback' => 'sanitize_text_field' )
+	);
+	$wp_customize->add_control(
+		'bgc_meta_description',
+		array(
+			'label'       => __( 'Search description', 'bloomingood' ),
+			'description' => __( 'Aim for about 155 characters. Longer and Google cuts it off mid-sentence.', 'bloomingood' ),
+			'section'     => 'bgc_social',
+			'type'        => 'textarea',
+		)
+	);
+
+	/* ---- Google reviews -------------------------------------------------- */
+	$wp_customize->add_section(
+		'bgc_reviews',
+		array(
+			'title'       => __( 'Google reviews', 'bloomingood' ),
+			'panel'       => 'bgc',
+			'description' => __( 'Leave these empty and the Happy Customers section keeps the written quotes. Fill them in and it shows real Google reviews instead, but only once there are enough of them to be worth showing.', 'bloomingood' ),
+		)
+	);
+	foreach ( array(
+		'place_id'   => array( __( 'Google Place ID', 'bloomingood' ), __( 'Find it at developers.google.com/maps/documentation/places/web-service/place-id', 'bloomingood' ) ),
+		'places_key' => array( __( 'Places API key', 'bloomingood' ), __( 'A Google Cloud key with the Places API enabled. Restrict it to this site.', 'bloomingood' ) ),
+	) as $key => $meta ) {
+		$wp_customize->add_setting(
+			'bgc_' . $key,
+			array( 'default' => $d[ $key ], 'sanitize_callback' => 'sanitize_text_field' )
+		);
+		$wp_customize->add_control(
+			'bgc_' . $key,
+			array( 'label' => $meta[0], 'description' => $meta[1], 'section' => 'bgc_reviews', 'type' => 'text' )
+		);
+	}
+	$wp_customize->add_setting(
+		'bgc_reviews_min',
+		array( 'default' => $d['reviews_min'], 'sanitize_callback' => 'absint' )
+	);
+	$wp_customize->add_control(
+		'bgc_reviews_min',
+		array(
+			'label'       => __( 'Only show Google reviews once there are at least', 'bloomingood' ),
+			'description' => __( 'Below this, the written quotes stay. A live feed showing one review advertises the weakness rather than hiding it.', 'bloomingood' ),
+			'section'     => 'bgc_reviews',
+			'type'        => 'number',
+			'input_attrs' => array( 'min' => 1, 'max' => 5 ),
+		)
+	);
 
 	/* ---- Where enquiries go ---------------------------------------------- */
 	$wp_customize->add_section(
